@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  synology-api-proxy:
+    build: .
+    container_name: synology-api-proxy
+    ports:
+      - "22727:22727"
+    environment:
+      # Synology NAS Configuration
+      - SYNOLOGY_URL=${SYNOLOGY_URL:-https://192.168.1.100:5001}
+      - SYNOLOGY_USER=${SYNOLOGY_USER:-admin}
+      - SYNOLOGY_PASSWORD=${SYNOLOGY_PASSWORD}
+      - SYNOLOGY_VERIFY_SSL=${SYNOLOGY_VERIFY_SSL:-false}
+      - SYNOLOGY_SESSION_TIMEOUT=${SYNOLOGY_SESSION_TIMEOUT:-3600}
+      
+      # Application Configuration
+      - APP_NAME=${APP_NAME:-Synology API Proxy}
+      - DEBUG=${DEBUG:-false}
+      - API_V1_PREFIX=${API_V1_PREFIX:-/api/v1}
+    
+    # Перезапуск при падении
+    restart: unless-stopped
+    
+    # Healthcheck
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:22727/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # Логирование
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  default:
+    name: synology-network
