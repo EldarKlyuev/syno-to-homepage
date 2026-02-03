@@ -186,3 +186,16 @@ class GenericAPIResponse(BaseModel):
     success: bool
     data: Optional[Dict[str, Any]] = None
     error: Optional[SynologyError] = None
+
+
+# Homepage schemas
+class HomepageStats(BaseModel):
+    """Aggregated VM statistics for homepage."""
+    runningram: int    # Сумма vram_size для running VM
+    runningcpu: int    # Сумма vcpu_num для running VM
+    runningcount: int  # Количество running VM
+
+
+class HomepageResponse(BaseModel):
+    """Homepage response wrapper."""
+    data: HomepageStats

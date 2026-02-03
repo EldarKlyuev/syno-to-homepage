@@ -48,6 +48,7 @@ FastAPI-based proxy for Synology File Station and Virtualization APIs with authe
 ### Virtualization API (`/api/v1/virtualization/`)
 
 - `GET /guests` - List virtual machines
+- `GET /homepage` - Get aggregated VM statistics (running RAM, CPU, count)
 
 ## Configuration
 
@@ -117,4 +118,9 @@ shares = response.json()
 # List VMs
 response = httpx.get("http://localhost:8000/api/v1/virtualization/guests")
 vms = response.json()
+
+# Get homepage stats
+response = httpx.get("http://localhost:8000/api/v1/virtualization/homepage")
+stats = response.json()
+# Returns: {"data": {"runningram": 12288, "runningcpu": 6, "runningcount": 3}}
 ```
